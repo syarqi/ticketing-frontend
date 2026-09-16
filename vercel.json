@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://ticketing-backend-dpyid0005.vercel.app/api/$1" },
+    { "source": "/uploads/(.*)", "destination": "https://ticketing-backend-dpyid0005.vercel.app/uploads/$1" }
+  ]
+}
