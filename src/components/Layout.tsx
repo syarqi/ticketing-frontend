@@ -23,9 +23,26 @@ export function Layout() {
       {/* Top bar */}
       <header className="sticky top-0 z-20 bg-white border-b border-slate-200">
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="font-bold text-slate-800 text-sm sm:text-base">
+          {/* Mobile: profile avatar + name + role, top-left */}
+          <div className="flex sm:hidden items-center gap-2 min-w-0">
+            <span className="text-2xl leading-none shrink-0">
+              {user?.role === 'ADMIN' ? '🧑‍💼' : '🛠️'}
+            </span>
+            <div className="leading-tight min-w-0">
+              <div className="text-sm font-semibold text-slate-800 truncate">
+                {user?.fullName}
+              </div>
+              <div className="text-[11px] text-slate-500 capitalize">
+                {user?.role === 'ADMIN' ? 'Admin' : 'Teknisi'}
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop: app title */}
+          <div className="hidden sm:block font-bold text-slate-800 text-sm sm:text-base">
             Network Service Ticketing
           </div>
+
           <div className="flex items-center gap-3">
             <span className="text-sm text-slate-600 hidden sm:inline">
               {user?.fullName} <span className="text-slate-400">({user?.role})</span>
