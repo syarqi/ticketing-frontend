@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Wrench, ListChecks, FolderCheck, UserCog, ShieldCheck, HardHat } from 'lucide-react';
 
 const linkBase =
   'flex flex-col items-center justify-center gap-0.5 text-xs font-medium px-2 py-2 rounded-lg transition-colors';
@@ -10,12 +11,12 @@ export function Layout() {
   const { user, logout } = useAuth();
 
   const navItems = [
-    { to: '/tickets', label: 'Tickets', icon: '' },
-    { to: '/my-tickets', label: 'My Tickets', icon: '' },
-    { to: '/closed', label: 'Closed', icon: '' },
+    { to: '/tickets', label: 'Tickets', icon: Wrench },
+    { to: '/my-tickets', label: 'My Tickets', icon: ListChecks },
+    { to: '/closed', label: 'Closed', icon: FolderCheck },
   ];
   if (user?.role === 'ADMIN') {
-    navItems.push({ to: '/admin', label: 'Admin', icon: '⚙️' });
+    navItems.push({ to: '/admin', label: 'Admin', icon: UserCog });
   }
 
   return (
@@ -25,9 +26,11 @@ export function Layout() {
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           {/* Mobile: profile avatar + name + role, top-left */}
           <div className="flex sm:hidden items-center gap-2 min-w-0">
-            <span className="text-2xl leading-none shrink-0">
-              {user?.role === 'ADMIN' ? '🧑‍💼' : '🛠️'}
-            </span>
+            {user?.role === 'ADMIN' ? (
+              <ShieldCheck className="w-7 h-7 text-blue-600 shrink-0" />
+            ) : (
+              <HardHat className="w-7 h-7 text-blue-600 shrink-0" />
+            )}
             <div className="leading-tight min-w-0">
               <div className="text-sm font-semibold text-slate-800 truncate">
                 {user?.fullName}
@@ -62,10 +65,10 @@ export function Layout() {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `px-3 py-1.5 rounded-md text-sm font-medium ${isActive ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-100'}`
+                `flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium ${isActive ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-100'}`
               }
             >
-              {item.icon} {item.label}
+              <item.icon className="w-4 h-4" /> {item.label}
             </NavLink>
           ))}
         </nav>
@@ -83,7 +86,7 @@ export function Layout() {
             to={item.to}
             className={({ isActive }) => `${linkBase} ${isActive ? linkActive : linkInactive} flex-1`}
           >
-            <span className="text-lg leading-none">{item.icon}</span>
+            <item.icon className="w-5 h-5" />
             {item.label}
           </NavLink>
         ))}
