@@ -10,9 +10,9 @@ export function Layout() {
   const { user, logout } = useAuth();
 
   const navItems = [
-    { to: '/tickets', label: 'Tickets', icon: '🎫' },
-    { to: '/my-tickets', label: 'My Tickets', icon: '🧰' },
-    { to: '/closed', label: 'Closed', icon: '📦' },
+    { to: '/tickets', label: 'Tickets', icon: '' },
+    { to: '/my-tickets', label: 'My Tickets', icon: '' },
+    { to: '/closed', label: 'Closed', icon: '' },
   ];
   if (user?.role === 'ADMIN') {
     navItems.push({ to: '/admin', label: 'Admin', icon: '⚙️' });
