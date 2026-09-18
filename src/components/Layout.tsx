@@ -12,9 +12,11 @@ export function Layout() {
 
   const navItems = [
     { to: '/tickets', label: 'Tickets', icon: Wrench },
-    { to: '/my-tickets', label: 'My Tickets', icon: ListChecks },
-    { to: '/closed', label: 'Closed', icon: FolderCheck },
   ];
+  if (user?.role !== 'USER') {
+    navItems.push({ to: '/my-tickets', label: 'My Tickets', icon: ListChecks });
+  }
+  navItems.push({ to: '/closed', label: 'Closed', icon: FolderCheck });
   if (user?.role === 'ADMIN') {
     navItems.push({ to: '/admin', label: 'Admin', icon: UserCog });
   }
