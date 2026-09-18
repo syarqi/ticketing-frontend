@@ -8,6 +8,30 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
+function formatDayHeader(iso: string) {
+  return new Date(iso).toLocaleDateString('id-ID', {
+    weekday: 'long',
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+function groupByDay(tickets: Ticket[]) {
+  const groups: { dayKey: string; label: string; items: Ticket[] }[] = [];
+  for (const t of tickets) {
+    const iso = t.closedAt ?? t.createdAt;
+    const dayKey = new Date(iso).toISOString().slice(0, 10);
+    let group = groups.find((g) => g.dayKey === dayKey);
+    if (!group) {
+      group = { dayKey, label: formatDayHeader(iso), items: [] };
+      groups.push(group);
+    }
+    group.items.push(t);
+  }
+  return groups;
+}
+
 export function Closed() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
@@ -92,22 +116,31 @@ export function Closed() {
       {error && <p className="text-sm text-red-600">{error}</p>}
       {!loading && tickets.length === 0 && <p className="text-sm text-slate-500">Tidak ada tiket yang cocok.</p>}
 
-      <div className="space-y-2">
-        {tickets.map((t) => (
-          <Link
-            key={t.id}
-            to={`/tickets/${t.id}`}
-            className="block bg-white border border-slate-200 rounded-xl p-3 shadow-sm hover:border-blue-300"
-          >
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-slate-500">{t.id}</span>
-              <PriorityBadge name={t.priority.name} color={t.priority.color} />
+      <div className="space-y-5">
+        {groupByDay(tickets).map((group) => (
+          <div key={group.dayKey}>
+            <h2 className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2 sticky top-14 bg-slate-50/95 backdrop-blur py-1">
+              {group.label}
+            </h2>
+            <div className="space-y-2">
+              {group.items.map((t) => (
+                <Link
+                  key={t.id}
+                  to={`/tickets/${t.id}`}
+                  className="block bg-white border border-slate-200 rounded-xl p-3 shadow-sm hover:border-blue-300 transition-colors"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs text-slate-500">{t.id}</span>
+                    <PriorityBadge name={t.priority.name} color={t.priority.color} />
+                  </div>
+                  <div className="font-semibold text-slate-800 text-sm">{t.location.name} — {t.issueType}</div>
+                  <div className="text-xs text-slate-500">
+                    {t.assignedTo?.fullName} · ditutup {t.closedAt ? formatDate(t.closedAt) : '-'}
+                  </div>
+                </Link>
+              ))}
             </div>
-            <div className="font-semibold text-slate-800 text-sm">{t.location.name} — {t.issueType}</div>
-            <div className="text-xs text-slate-500">
-              {t.assignedTo?.fullName} · ditutup {t.closedAt ? formatDate(t.closedAt) : '-'}
-            </div>
-          </Link>
+          </div>
         ))}
       </div>
     </div>
