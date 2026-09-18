@@ -1,12 +1,14 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { HardHat } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { api, apiErrorMessage } from '../api/client';
 import { Ticket } from '../types';
 import { PriorityBadge } from '../components/PriorityBadge';
 import { CreateTicketModal } from '../components/CreateTicketModal';
 
 export function Tickets() {
+  const { user } = useAuth();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -86,17 +88,19 @@ export function Tickets() {
               <div className="flex gap-2">
                 <Link
                   to={`/tickets/${t.id}`}
-                  className="flex-1 text-center text-xs font-semibold text-slate-600 border border-slate-300 rounded-md px-3 py-2 hover:bg-slate-50 transition-colors"
+                  className="flex-1 text-center text-xs font-semibold text-slate-600 border border-slate-300 rounded-md px-3 py-2 hover:bg-slate-50"
                 >
                   DETAIL
                 </Link>
-                <button
-                  onClick={() => handleTake(t.id)}
-                  disabled={takingId === t.id}
-                  className="flex-1 text-center text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 rounded-md px-3 py-2 transition-colors"
-                >
-                  {takingId === t.id ? '...' : 'AMBIL'}
-                </button>
+                {user?.role !== 'USER' && (
+                  <button
+                    onClick={() => handleTake(t.id)}
+                    disabled={takingId === t.id}
+                    className="flex-1 text-center text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 rounded-md px-3 py-2"
+                  >
+                    {takingId === t.id ? '...' : 'AMBIL'}
+                  </button>
+                )}
               </div>
             )}
           </div>
