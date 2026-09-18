@@ -91,6 +91,7 @@ export function UsersAdmin() {
             className="rounded-lg border border-slate-300 px-3 py-2 text-sm col-span-2 sm:col-span-1"
           >
             <option value="TEKNISI">Teknisi</option>
+            <option value="USER">User</option>
             <option value="ADMIN">Admin</option>
           </select>
         </div>
